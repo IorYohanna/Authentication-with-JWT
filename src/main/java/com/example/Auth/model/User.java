@@ -5,12 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+/* import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType; */
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -23,8 +24,7 @@ import lombok.Setter;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String matricule;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)
@@ -36,11 +36,18 @@ public class User implements UserDetails {
     private String verificationCode;
     @Column(name = "verification_expired")
     private LocalDateTime verificationExpireAt;
+    private String fonction;
+    private Integer contact;
+    @Column(name = "id_service")
+    private Integer idService;
+    @Column(name = "id_pefa")
+    private Integer idPefa;
 
-    public User(String username, String email, String password) {
+    public User(String username, String matricule, String password, String email) {
         this.username = username;
-        this.email = email;
+        this.matricule = matricule;
         this.password = password;
+        this.email = email;
     }
 
     public User() {
@@ -48,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + fonction));
     }
 
     @Override

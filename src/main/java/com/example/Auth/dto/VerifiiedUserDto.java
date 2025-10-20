@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class VerifiiedUserDto {
-    private String email;
+    private String matricule;
     private String verificationCode;
 }

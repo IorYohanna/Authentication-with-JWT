@@ -11,6 +11,7 @@ import com.example.Auth.repository.UserRepository;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+
     public UserService(UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
     }

@@ -34,8 +34,10 @@ public class AuthenticationService {
 
     public User signUp (RegisterUSerDto input) {
         User user = new User(input.getUsername(),
-                input.getEmail(),
-                passwordEncoder.encode(input.getPassword()));
+                input.getMatricule(),
+                passwordEncoder.encode(input.getPassword())
+                ,input.getEmail()
+        );
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationExpireAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
@@ -45,7 +47,7 @@ public class AuthenticationService {
     }
 
     public User authenticate (LoginUserDto input) {
-        User user = userRepository.findByEmail(input.getEmail())
+        User user = userRepository.findByMatricule(input.getMatricule())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         if(!user.isEnabled()) {
@@ -53,13 +55,13 @@ public class AuthenticationService {
         }
 
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword())
+            new UsernamePasswordAuthenticationToken(input.getMatricule(), input.getPassword())
         );
         return user;
     }
 
     public void generateVerificationCode(VerifiiedUserDto input) {
-        Optional<User> userOpt = userRepository.findByEmail(input.getEmail());
+        Optional<User> userOpt = userRepository.findByMatricule(input.getMatricule());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
 
@@ -85,7 +87,7 @@ public class AuthenticationService {
     }
 
      public void verifyUser(VerifiiedUserDto input) {
-        Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
+        Optional<User> optionalUser = userRepository.findByMatricule(input.getMatricule());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.getVerificationExpireAt().isBefore(LocalDateTime.now())) {
@@ -104,8 +106,8 @@ public class AuthenticationService {
         }
     }
 
-    public void resendVerificationCode(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+    public void resendVerificationCode(String matricule) {
+        Optional<User> optionalUser = userRepository.findByMatricule(matricule);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.isEnabled()) {

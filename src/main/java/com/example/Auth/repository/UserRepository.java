@@ -10,9 +10,9 @@ import org.springframework.data.repository.ListCrudRepository;
 
 
 @Repository
-public interface UserRepository extends ListCrudRepository<User, Long> {
+public interface UserRepository extends ListCrudRepository<User, String> {
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByMatricule(String matricule);
     Optional<User> findByVerificationCode(String verificationCode);
 
 }
